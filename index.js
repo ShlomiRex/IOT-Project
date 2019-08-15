@@ -49,7 +49,7 @@ app.use(express.static(__dirname + "/public")) // public folder
 
 // ------------------ ROUTES SETUP ------------------
 
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./controllers/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
 // ------------------ FINAL SETUP ------------------

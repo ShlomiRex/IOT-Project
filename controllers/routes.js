@@ -69,12 +69,7 @@ module.exports = function(app, passport) {
     app.post('/fileupload', function(req, res) {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
-            var oldpath = files.filetoupload.path;
-            //var newpath = recipts_datalake_path + files.filetoupload.name; //TODO: If multiple users upload files with SAME NAME then the computer will override. Need to find a good name for each file so that it will be unique. MAybe timestamp ?
-
-
-            
-            //Read file before uploading it
+            //Read file
             //console.log(oldpath)
             var data = fs.readFileSync(oldpath);
             //console.log(data.toString());
@@ -82,37 +77,7 @@ module.exports = function(app, passport) {
             var go = recipts.preprocess_recipt_json(data.toString());
             //If JSON is correct and valid
             if(go) {
-
-                // Include created client
-                var hdfs = require('webhdfs-client');
-
-                // Initialize readable stream from local file
-                // Change this to real path in your file system
-                var localFileStream = fs.createReadStream(oldpath);
-                console.log(oldpath);
-
-                // Initialize writable stream to HDFS target
-                var remoteFileStream = hdfs.createWriteStream('/bigdata/1.json');
-
-                // Pipe data to HDFS
-                localFileStream.pipe(remoteFileStream);
-
-                // Handle errors
-                remoteFileStream.on('error', function onError (err) {
-                    // Do something with the error
-                    console.log(err);
-                    console.log("error");
-                });
-
-                // Handle finish event
-                remoteFileStream.on('finish', function onFinish () {
-                    // Upload is done
-                    console.log("done");
-                });
-
-                //var res = fs.renameSync(oldpath, newpath);
-                //fs.writeFileSync(newpath, data);
-                //console.log("Successfuly saved recipt to disk.")
+                //TODO: Use upload API
 
                 res.write('File uploaded and is correct format!');
                 res.end();
