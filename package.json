@@ -1,0 +1,39 @@
+{
+  "name": "iot-project",
+  "version": "1.0.0",
+  "description": "IOT Project in IOT course. Using ESP with MQTT protocol to send data to edge computer and analysze sensors data by using cloud BigML.",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "chart.js": "^2.8.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "express-session": "^1.14.2",
+    "formidable": "^1.2.1",
+    "kafka-node": "^4.1.3",
+    "method-override": "~2.3.6",
+    "mongodb": "^3.3.0-beta2",
+    "mongoose": "^5.6.9",
+    "morgan": "^1.9.1",
+    "node-red-node-mongodb": "^0.0.14",
+    "nodemon": "^1.19.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShlomiRex/IOT-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShlomiRex/IOT-Project/issues"
+  },
+  "homepage": "https://github.com/ShlomiRex/IOT-Project#readme"
+}

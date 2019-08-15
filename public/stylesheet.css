@@ -1,0 +1,82 @@
+/*
+---------------------------------------- navbar ----------------------------------------
+*/
+
+nav.navbar {
+    background-color: black;
+    border-radius: 10px;
+    padding: 10px;
+
+    display: grid;
+}
+
+nav.navbar ul {
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+}
+
+nav.navbar ul li {
+    float: left;
+    list-style: none;
+}
+
+nav.navbar ul li a {
+    display: block;
+    padding: 8px;
+    background-color: black;
+    color: white;
+    margin: 5px;
+    text-decoration: none;
+    border: 2px;
+    border-style: solid;
+    border-color: white;
+
+    text-align: justify;
+}
+
+
+
+nav.navbar ul li a:hover {
+    background-color: gray;
+}
+
+/*
+nav.navbar ul li a:active {
+    background-color: #313131;
+}
+*/
+
+/*
+---------------------------------------- body ----------------------------------------
+*/
+
+main {
+    background-color: white;
+    border-radius: 25px;
+    margin: 25px;
+    padding: 25px;
+
+    border: 2px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: black;
+}
+
+
+
+
+/*
+---------------------------------------- footer ----------------------------------------
+*/
+
+.footer {
+    background-color:  white; 
+    color: black; 
+    border: 3px solid black;
+    border-radius: 100%;  
+    width: 270px; 
+    height: 50px; 
+    margin: 0 auto; 
+    text-align: center;
+}
