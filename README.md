@@ -1,5 +1,5 @@
 # IOT-Project
-IOT Project in IOT course
+IOT Project in IOT course. Using ESP with MQTT protocol to send data to edge computer and analysze sensors data by using cloud BigML.
 
 # Setup
 

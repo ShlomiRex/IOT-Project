@@ -1,5 +1,6 @@
 sudo apt install npm nodejs
 sudo npm install -g --unsafe-perm node-red
+sudo npm install node-red-node-mongodb
 
 bash esp32-mqtt/setup.sh
 
