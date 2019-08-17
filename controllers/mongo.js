@@ -1,63 +1,26 @@
 //mongo.js
-var url = "mongodb://localhost:27017";
-var MongoClient = require('mongodb').MongoClient;
-
-const default_db_name = "big-data";
-var random = require("./random"); //For random receipt
-
-function connect(callback) {
-  MongoClient.connect(url, function(err, db) { 
-    if (err) return callback(err);
-    console.log("Connected to MongoDB!");
-    callback(false, db.db(default_db_name));
-    db.close();
-  });
-}
+const mongoose = require('mongoose');
+const conf = require('../config/database')
 
 
+const sensor_data_schema = mongoose.Schema({
+	sensorName: String,
+	sensorTime: Date
 
-//Insert ANY document 
-function insert(document) {	
+});
 
-  connect((err, db)=> {
-    if(err) throw err;
-
-
-    db.collection("receipts").insertOne(document, function(err, res) {
-			if (err) throw err;
-      console.log("1 document inserted");
-      
-    });
-  });
-
-	
-}
-
+//console.log(mongoose.SchemaTypes)
 /*
-function insert_random_receipts_to_db(amount) {
-  for(var i = 0; i < amount; i++) {
-    var receipt = random.random_receipt();
-    insert(receipt);
-  }
+const Cat = mongoose.model('Cat', { name: String });
+
+const kitty = new Cat({ name: 'Zildjian' });
+kitty.save().then(() => console.log('meow'));
+
+function save_sensor_data(json) {
+	mongoose.connect(conf.url, {useNewUrlParser: true});
+
 }
 */
-/*
-
-function insert_random_receipts_to_db_shoofersal(amount) {
-  var receipts = random.random_receipts_shoofersal(amount);
-  console.log(receipts.length)
-  console.log(receipts)
-  //insert(receipt);
-}
-
-insert_random_receipts_to_db_shoofersal(2);
-
-*/
-
-
-//insert_random_receipts_to_db(100); //Use it in a function or somewhere
-
 module.exports = {
-    connect, insert
-};
 
+};
