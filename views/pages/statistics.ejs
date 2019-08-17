@@ -18,73 +18,49 @@
 </div>
 
 <script>
-var name = "<%= name %>";
-  console.log(name);
 
-var timeFormat = 'MM/DD/YYYY HH:mm';
-		function newDate(days) {
-      var res = moment().add(days, 'd').toDate();
-      console.log(res);
-			return res;
-    }
-    
-    function newDateString(days) {
-			return moment().add(days, 'd').format(timeFormat);
-    }
-    
+	var labels = <%- JSON.stringify(labels) %>; 
+	var dataset_label = "<%= dataset_label %>";
+	var title_text = "<%= title_text %>";
 
-    let myChart = document.getElementById('myChart').getContext('2d');
 
+
+
+	let myChart = document.getElementById('myChart').getContext('2d');
     // Global Options
-    Chart.defaults.global.defaultFontFamily = 'Lato';
-    Chart.defaults.global.defaultFontSize = 18;
-    Chart.defaults.global.defaultFontColor = '#777';
+    //Chart.defaults.global.defaultFontFamily = 'Lato';
+    //Chart.defaults.global.defaultFontSize = 18;
+    //Chart.defaults.global.defaultFontColor = '#777';
 
     let massPopChart = new Chart(myChart, {
         type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
         data:{
-        labels:['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
+        labels: labels,
         datasets:[{
-            label:'Population',
+            label: dataset_label,
             data:[
                   0, 1, 2, 3,4,new Date().getSeconds()
                 ],
                 //backgroundColor:'green',
-                backgroundColor:[
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(255, 159, 64, 0.6)',
-                'rgba(255, 99, 132, 0.6)'
-                ],
-                borderWidth:2,
-                borderColor:'#777',
+                
+                borderWidth:3,
+                borderColor: "#000",
                 hoverBorderWidth:4
             }]
         },
         options:{
-        title:{
-            display:true,
-            text:'Largest Cities In Massachusetts',
-            fontSize:25
-        },
-        legend:{
-            display:true,
-            position:'right',
-            labels:{
-            fontColor:'#000'
-            }
-        },
-        layout:{
-            padding: {
-                right: 1
-            }
-        },
-        tooltips:{
-            enabled:true
-        }
+			title:{
+				display:true,
+				text: title_text,
+				fontSize:25
+			},
+			legend:{
+				display:true,
+				position:'right',
+				labels:{
+					fontColor:'#000'
+				}
+			}
         }
     });
     </script>

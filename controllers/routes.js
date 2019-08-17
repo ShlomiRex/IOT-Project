@@ -12,7 +12,12 @@ module.exports = function(app, passport) {
     });
 
     app.get('/statistics', function(req, res) {
-        var data = {name:"test"};
+        
+        var data = {
+            labels: ['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
+            title_text: "A Test Title",
+            dataset_label: "Number of people on earth"
+        };
         //Second argument is data sent to ejs template to generate dynamic page!
         res.render('pages/statistics', data); 
         
