@@ -13,19 +13,26 @@
 </header>
 
 <main>
-
-
-<style>
-    canvas {
-        width: 1500px !important;
-        height: 600px !important;
-    }    
-</style>
-<div>
+<div style="width: 75%">
     <canvas id="myChart"></canvas>
 </div>
 
 <script>
+var name = "<%= name %>";
+  console.log(name);
+
+var timeFormat = 'MM/DD/YYYY HH:mm';
+		function newDate(days) {
+      var res = moment().add(days, 'd').toDate();
+      console.log(res);
+			return res;
+    }
+    
+    function newDateString(days) {
+			return moment().add(days, 'd').format(timeFormat);
+    }
+    
+
     let myChart = document.getElementById('myChart').getContext('2d');
 
     // Global Options
@@ -34,18 +41,13 @@
     Chart.defaults.global.defaultFontColor = '#777';
 
     let massPopChart = new Chart(myChart, {
-        type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
         data:{
         labels:['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
         datasets:[{
             label:'Population',
             data:[
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
+                  0, 1, 2, 3,4,new Date().getSeconds()
                 ],
                 //backgroundColor:'green',
                 backgroundColor:[

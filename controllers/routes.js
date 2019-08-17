@@ -12,7 +12,9 @@ module.exports = function(app, passport) {
     });
 
     app.get('/statistics', function(req, res) {
-        res.render('pages/statistics');
+        var data = {name:"test"};
+        //Second argument is data sent to ejs template to generate dynamic page!
+        res.render('pages/statistics', data); 
         
     });
 
