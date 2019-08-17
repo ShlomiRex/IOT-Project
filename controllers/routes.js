@@ -12,7 +12,44 @@ module.exports = function(app, passport) {
     });
 
     app.get('/statistics', function(req, res) {
-        res.render('pages/statistics');
+        //JSONS of sensor data between date X and Y
+        //TODO: Read from mongoDB the jsons
+        //For simplicity I randomize the sensor data
+        var jsons = [];
+
+        //Generate random sensor data, put into json
+        for(var i = 1; i <= 31; i++) {
+            jsons.push({
+                value: Math.random()*1023
+            });
+        }
+
+        var labels = [] //To generate 
+
+        for(var i = 1; i <= 31; i++) {
+            labels.push(i)
+        }
+        
+        var dataset_data = []
+        jsons.forEach((json)=> {
+            var timestamp = json["timestamp"]
+            var sensor_name = json["sensor"]
+            var sensor_value = json["value"]
+
+            dataset_data.push(sensor_value)
+        });
+
+        //For simplicity, all jsons are from this category (same sensor)
+        var sensor_name = "Temp"
+
+        var data = {
+            labels: labels,
+            title_text: "Sensor "+sensor_name+" value over the month",
+            dataset_label: "Sensor value",
+            dataset_data: dataset_data
+        };
+        //Second argument is data sent to ejs template to generate dynamic page!
+        res.render('pages/statistics', data); 
         
     });
 

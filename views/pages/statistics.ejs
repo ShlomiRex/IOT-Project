@@ -13,76 +13,65 @@
 </header>
 
 <main>
-
-
-<style>
-    canvas {
-        width: 1500px !important;
-        height: 600px !important;
-    }    
-</style>
-<div>
+<div style="width: 75%">
     <canvas id="myChart"></canvas>
 </div>
 
 <script>
-    let myChart = document.getElementById('myChart').getContext('2d');
 
+	var labels = <%- JSON.stringify(labels) %>; 
+	var dataset_label = "<%= dataset_label %>";
+	var title_text = "<%= title_text %>";
+	var dataset_data = <%- JSON.stringify(dataset_data) %>; 
+
+
+
+	let myChart = document.getElementById('myChart').getContext('2d');
     // Global Options
-    Chart.defaults.global.defaultFontFamily = 'Lato';
-    Chart.defaults.global.defaultFontSize = 18;
-    Chart.defaults.global.defaultFontColor = '#777';
+    //Chart.defaults.global.defaultFontFamily = 'Lato';
+    //Chart.defaults.global.defaultFontSize = 18;
+    //Chart.defaults.global.defaultFontColor = '#777';
 
     let massPopChart = new Chart(myChart, {
-        type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
         data:{
-        labels:['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
+        labels: labels,
         datasets:[{
-            label:'Population',
-            data:[
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-                ],
+            label: dataset_label,
+            data: dataset_data,
                 //backgroundColor:'green',
-                backgroundColor:[
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)',
-                'rgba(153, 102, 255, 0.6)',
-                'rgba(255, 159, 64, 0.6)',
-                'rgba(255, 99, 132, 0.6)'
-                ],
-                borderWidth:2,
-                borderColor:'#777',
+                
+                borderWidth:3,
+                borderColor: "#000",
                 hoverBorderWidth:4
             }]
         },
         options:{
-        title:{
-            display:true,
-            text:'Largest Cities In Massachusetts',
-            fontSize:25
-        },
-        legend:{
-            display:true,
-            position:'right',
-            labels:{
-            fontColor:'#000'
-            }
-        },
-        layout:{
-            padding: {
-                right: 1
-            }
-        },
-        tooltips:{
-            enabled:true
-        }
+			title:{
+				display:true,
+				text: title_text,
+				fontSize:25
+			},
+			legend:{
+				display:true,
+				position:'right',
+				labels:{
+					fontColor:'#000'
+				}
+			},scales: {
+				yAxes: [{
+					scaleLabel: {
+						display: true,
+						labelString: 'Sensor Value'
+					}
+				}],
+				xAxes: [{
+					scaleLabel: {
+						display: true,
+						labelString: "Day of the month"
+					}
+				}]
+			}  
         }
     });
     </script>
