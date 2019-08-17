@@ -15,10 +15,11 @@ ESP Data is saved in "iot" database, inside "esp_sensors" collection.
 
 # Sensors Data Model - JSON Scheme
 ```
+For each sensor, it will generate this json:
 {
     timestamp: Date,
-    <sensorname>: <sensor value>,
-    ...
-    <sensorname>: <sensor value>,
+    sensor: String,
+    value: Number
 }
+
 ```
