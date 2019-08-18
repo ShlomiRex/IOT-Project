@@ -1,4 +1,7 @@
 // app/routes.js
+const conf = require("../config/database")
+const mongo = require("./mongo")
+
 module.exports = function(app, passport) {
 
     // ------------------ GET ------------------
@@ -12,21 +15,46 @@ module.exports = function(app, passport) {
     });
 
     app.get('/statistics', function(req, res) {
-        var timestampArray=[] tempArray=[], humidArray=[],lightArray=[],pirArray=[];
-        var mongoClient = require('mongodb').MongoClient,assert = require('assert');
-        mongoClient.connect('mongodb:/127.0.0.1:27017/IOT', function (err, db){ //check the name
-            assert.equal(null,err);
-            var data=db.collection('COLLECTION_NAME').find().sort({date:1});//check the name
-            data.each( function(err.doc) {
-                if ((doc != null) && (new Date(doc.timestamp)>=min) && (new Date(doc.timestamp)<=max)
-                    timestampArray.push(doc.timestamp);
-                    tempArray.push(doc.temp);
-                    humidArray.push(doc.humid);
-                    lightArray.push(doc.light);
-                    pirArray.push(doc.pir);
-            }, function(){db.close();}
-        }
+        var timestampArray=[], tempArray=[], humidArray=[],lightArray=[],pirArray=[]; 
 
+        mongo.mongoose.connect(conf.url, {useNewUrlParser: true});
+        var db = mongo.mongoose.connection;
+            db.on('error', console.error.bind(console, 'connection error:'));
+            db.once('open', function() {
+                var jsons = db.collection(conf.sensors_collection).find()
+
+                var min = 0, max = 9999999999999999999999;
+                
+                jsons.forEach((doc)=>{
+                    var mydate = new Date(doc.timestamp);
+
+                    if ((doc != null) && (mydate.getTime()>=min) && (mydate.getTime()<=max)) {
+                        timestampArray.push(doc.timestamp);
+                        tempArray.push(doc.temp);
+                        humidArray.push(doc.humid);
+                        lightArray.push(doc.light);
+                        pirArray.push(doc.pir);
+                    }
+                }, 
+                ()=>{
+                    var data = {
+                        title_text: "Sensors value over the time",
+                        labels: timestampArray,
+            
+                        dataset1_title: "Temp value",
+                        dataset1_data: tempArray,
+                        dataset2_title: "Humid value",
+                        dataset2_data: humidArray,
+                        dataset3_title: "Light value",
+                        dataset3_data: lightArray,
+                        dataset4_title: "Pirvalue",
+                        dataset4_data: pirArray
+                    };
+                    //Second argument is data sent to ejs template to generate dynamic page!
+                    res.render('pages/statistics', data); 
+                });
+                
+        });
         //JSONS of sensor data between date X and Y
         //TODO: Read from mongoDB the jsons
         //For simplicity I randomize the sensor data
@@ -65,23 +93,10 @@ module.exports = function(app, passport) {
         //lightArray=['53','13','13','13','55'];
         //pirArray=['0','0','0','2','18'];
 
-        var data = {
-            title_text: "Sensors value over the time",
-            labels: timestampArray,
 
-            dataset1_title: "Temp value",
-            dataset1_data: tempArray,
-            dataset2_title: "Humid value",
-            dataset2_data: humidArray,
-            dataset3_title: "Light value",
-            dataset3_data: lightArray,
-            dataset4_title: "Pirvalue",
-            dataset4_data: pirArray
-        };
-        //Second argument is data sent to ejs template to generate dynamic page!
-        res.render('pages/statistics', data); 
         
     });
+
 
     app.get('/login', function(req, res) {
         // render the page and pass in any flash data if it exists
