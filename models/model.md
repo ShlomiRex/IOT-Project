@@ -10,16 +10,19 @@ Please note the '/' in the name of the topic. It's called Topic Seperator. Like 
 ESP Data is saved in "iot" database, inside "esp_sensors" collection.
 
 # Sensors
-1) Moisture
-2) 
+1) Moisture, Humidity
+2) Light
+3) PIR (Movement sensor)
 
 # Sensors Data Model - JSON Scheme
+Database: iot
+Collectiom: sensors
 ```
-For each sensor, it will generate this json:
 {
-    timestamp: Date,
-    sensor: String,
-    value: Number
+    timestamp : Date,
+    temp: Number,
+    humid: Number,
+    light: Number,
+    pir: Number
 }
-
 ```
