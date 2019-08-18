@@ -12,41 +12,71 @@ module.exports = function(app, passport) {
     });
 
     app.get('/statistics', function(req, res) {
+        var timestampArray=[] tempArray=[], humidArray=[],lightArray=[],pirArray=[];
+        var mongoClient = require('mongodb').MongoClient,assert = require('assert');
+        mongoClient.connect('mongodb:/127.0.0.1:27017/IOT', function (err, db){ //check the name
+            assert.equal(null,err);
+            var data=db.collection('COLLECTION_NAME').find().sort({date:1});//check the name
+            data.each( function(err.doc) {
+                if ((doc != null) && (new Date(doc.timestamp)>=min) && (new Date(doc.timestamp)<=max)
+                    timestampArray.push(doc.timestamp);
+                    tempArray.push(doc.temp);
+                    humidArray.push(doc.humid);
+                    lightArray.push(doc.light);
+                    pirArray.push(doc.pir);
+            }, function(){db.close();}
+        }
+
         //JSONS of sensor data between date X and Y
         //TODO: Read from mongoDB the jsons
         //For simplicity I randomize the sensor data
-        var jsons = [];
 
+        //var jsons = [];
+        //
         //Generate random sensor data, put into json
-        for(var i = 1; i <= 31; i++) {
-            jsons.push({
-                value: Math.random()*1023
-            });
-        }
+        //for(var i = 1; i <= 31; i++) {
+        //    jsons.push({
+        //        value: Math.random()*1023
+        //    });
+        //}
+        //
+        //var labels = [] //To generate 
+        //
+        //for(var i = 1; i <= 31; i++) {
+        //    labels.push(i)
+        //}
+        //
+        //var dataset_data = []
+        //jsons.forEach((json)=> {
+        //    var timestamp = json["timestamp"]
+        //    var sensor_name = json["sensor"]
+        //    var sensor_value = json["value"]
+        //
+        //    dataset_data.push(sensor_value)
+        //});
+        //
+        ////For simplicity, all jsons are from this category (same sensor)
+        //var sensor_name = "Temp"
+    
 
-        var labels = [] //To generate 
-
-        for(var i = 1; i <= 31; i++) {
-            labels.push(i)
-        }
-        
-        var dataset_data = []
-        jsons.forEach((json)=> {
-            var timestamp = json["timestamp"]
-            var sensor_name = json["sensor"]
-            var sensor_value = json["value"]
-
-            dataset_data.push(sensor_value)
-        });
-
-        //For simplicity, all jsons are from this category (same sensor)
-        var sensor_name = "Temp"
+        //timestampArray=['1/10/93 10:11:22','1/10/93 10:11:33','1/10/93 10:11:44','1/10/93 10:11:55','1/10/93 10:12:06'];
+        //tempArray=['10','11','13','16','20'];
+        //humidArray=['12','21','12','21','12'];
+        //lightArray=['53','13','13','13','55'];
+        //pirArray=['0','0','0','2','18'];
 
         var data = {
-            labels: labels,
-            title_text: "Sensor "+sensor_name+" value over the month",
-            dataset_label: "Sensor value",
-            dataset_data: dataset_data
+            title_text: "Sensors value over the time",
+            labels: timestampArray,
+
+            dataset1_title: "Temp value",
+            dataset1_data: tempArray,
+            dataset2_title: "Humid value",
+            dataset2_data: humidArray,
+            dataset3_title: "Light value",
+            dataset3_data: lightArray,
+            dataset4_title: "Pirvalue",
+            dataset4_data: pirArray
         };
         //Second argument is data sent to ejs template to generate dynamic page!
         res.render('pages/statistics', data); 
