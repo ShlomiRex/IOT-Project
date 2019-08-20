@@ -1,3 +1,6 @@
 [submodule "esp32-mqtt"]
 	path = esp32-mqtt
 	url = https://github.com/ShlomiRex/esp32-mqtt
+[submodule "IOT-Project-AndroidSerialBLT"]
+	path = IOT-Project-AndroidSerialBLT
+	url = https://github.com/ShlomiRex/IOT-Project-AndroidSerialBLT
