@@ -20,34 +20,26 @@ module.exports = function(app, passport) {
         
         mongo.MongoClient.connect(conf.url, function(err, db) {
             if (err) throw err;
-            
-            const limit = 10;            
             var dbo = db.db(conf.db_name);
+
+
+            const limit = 20;            
+            var min = new Date("2019-08-19T00:00:00Z")
+            var max = new Date("2019-08-20T23:59:59Z")
             
-            dbo.collection(conf.sensors_collection).find().limit(limit).toArray(function(err, result) {
+            var find_filter = {
+                "timestamp": { $gte : min, $lte: max }
+            };
+
+            dbo.collection(conf.sensors_collection).find(find_filter).limit(limit).toArray(function(err, result) {
                 if (err) throw err;
+
                 
-                var from = new Date();
-                var to = new Date()
-
-                from.setMonth(7)
-                to.setMonth(7)
-                //to.setMonth(8)
-
-                from.setDate(1)
-                to.setDate(15)
-
-                from.setHours(1)
-
-
-                var min = from.getTime(), max = to.getTime();
                 
                 for(var i = 0; i < result.length; i++) {
                     var doc = result[i]
 
-                    var mydate = new Date(doc.timestamp);
-
-                    if ((doc != null) && (mydate.getTime()>=min) && (mydate.getTime()<=max)) {
+                    if (doc != null) {
                         timestampArray.push(doc.timestamp);
                         tempArray.push(doc.temp);
                         humidArray.push(doc.humid);
