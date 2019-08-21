@@ -5,6 +5,7 @@
 <head>
     <% include ../partials/head %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/utils.js"></script>
 </head>
 <body class="container">
 
@@ -19,10 +20,17 @@
 
 <script>
 
+	var title_text = "<%= title_text %>";    
 	var labels = <%- JSON.stringify(labels) %>; 
-	var dataset_label = "<%= dataset_label %>";
-	var title_text = "<%= title_text %>";
-	var dataset_data = <%- JSON.stringify(dataset_data) %>; 
+
+	var dataset1_title = "<%= dataset1_title %>";
+	var dataset1_data = <%- JSON.stringify(dataset1_data) %>; 
+	var dataset2_title = "<%= dataset2_title %>";
+	var dataset2_data = <%- JSON.stringify(dataset2_data) %>; 
+	var dataset3_title = "<%= dataset3_title %>";
+	var dataset3_data = <%- JSON.stringify(dataset3_data) %>; 
+	var dataset4_title = "<%= dataset4_title %>";
+	var dataset4_data = <%- JSON.stringify(dataset4_data) %>; 
 
 
 
@@ -36,15 +44,35 @@
         type:'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
         data:{
         labels: labels,
-        datasets:[{
-            label: dataset_label,
-            data: dataset_data,
-                //backgroundColor:'green',
-                
+        datasets:[
+            {label: dataset1_title,
+            data: dataset1_data,
+                borderColor: 'rgb(255, 99, 132)',
+
                 borderWidth:3,
-                borderColor: "#000",
-                hoverBorderWidth:4
-            }]
+                hoverBorderWidth:4},
+
+            {label: dataset2_title,
+            data: dataset2_data,
+                borderColor: 'rgb(255, 159, 64)',
+    
+                borderWidth:3,
+                hoverBorderWidth:4},
+
+            {label: dataset3_title,
+            data: dataset3_data,
+                borderColor: 'rgb(75, 192, 192)',
+
+                borderWidth:3,
+                hoverBorderWidth:4},
+
+            {label: dataset4_title,
+            data: dataset4_data,
+                borderColor: 'rgb(54, 162, 235)',
+
+                borderWidth:3,
+                hoverBorderWidth:4}
+       ]
         },
         options:{
 			title:{
@@ -68,7 +96,7 @@
 				xAxes: [{
 					scaleLabel: {
 						display: true,
-						labelString: "Day of the month"
+						labelString: "timestamp"
 					}
 				}]
 			}  
