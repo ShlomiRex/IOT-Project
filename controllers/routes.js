@@ -21,23 +21,25 @@ module.exports = function(app, passport) {
         mongo.MongoClient.connect(conf.url, function(err, db) {
             if (err) throw err;
             
+            const limit = 10;
+
             console.log("connect")
 
             
             var dbo = db.db(conf.db_name);
             
-            dbo.collection(conf.sensors_collection).find().toArray(function(err, result) {
+            dbo.collection(conf.sensors_collection).find().limit(limit).toArray(function(err, result) {
                 if (err) throw err;
 
                 var min = 0, max = 9999999999999999999999;
                 
                 for(var i = 0; i < result.length; i++) {
                     var doc = result[i]
-                    console.log(doc);
+                    //console.log(doc);
 
                     var mydate = new Date(doc.timestamp);
 
-                    console.log("getTime = " + mydate.getTime())
+                    //console.log("getTime = " + mydate.getTime())
 
 
 
@@ -50,21 +52,21 @@ module.exports = function(app, passport) {
                     }
                 }
 
-                console.log(timestampArray)
+                //console.log(timestampArray)
                 //console.log(tempArray)
                 //console.log(humidArray)
 
                 var data = {
-                    title_text: "Sensors value over the time",
+                    title_text: "Sensors value over time",
                     labels: timestampArray,
         
-                    dataset1_title: "Temp value",
+                    dataset1_title: "Temperature",
                     dataset1_data: tempArray,
-                    dataset2_title: "Humid value",
+                    dataset2_title: "Humidity",
                     dataset2_data: humidArray,
-                    dataset3_title: "Light value",
+                    dataset3_title: "Light",
                     dataset3_data: lightArray,
-                    dataset4_title: "Pirvalue",
+                    dataset4_title: "PIR",
                     dataset4_data: pirArray
                 };
                 //Second argument is data sent to ejs template to generate dynamic page!
