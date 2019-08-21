@@ -21,27 +21,31 @@ module.exports = function(app, passport) {
         mongo.MongoClient.connect(conf.url, function(err, db) {
             if (err) throw err;
             
-            const limit = 10;
-
-            console.log("connect")
-
-            
+            const limit = 10;            
             var dbo = db.db(conf.db_name);
             
             dbo.collection(conf.sensors_collection).find().limit(limit).toArray(function(err, result) {
                 if (err) throw err;
+                
+                var from = new Date();
+                var to = new Date()
 
-                var min = 0, max = 9999999999999999999999;
+                from.setMonth(7)
+                to.setMonth(7)
+                //to.setMonth(8)
+
+                from.setDate(1)
+                to.setDate(15)
+
+                from.setHours(1)
+
+
+                var min = from.getTime(), max = to.getTime();
                 
                 for(var i = 0; i < result.length; i++) {
                     var doc = result[i]
-                    //console.log(doc);
 
                     var mydate = new Date(doc.timestamp);
-
-                    //console.log("getTime = " + mydate.getTime())
-
-
 
                     if ((doc != null) && (mydate.getTime()>=min) && (mydate.getTime()<=max)) {
                         timestampArray.push(doc.timestamp);
@@ -51,10 +55,6 @@ module.exports = function(app, passport) {
                         pirArray.push(doc.pir);
                     }
                 }
-
-                //console.log(timestampArray)
-                //console.log(tempArray)
-                //console.log(humidArray)
 
                 var data = {
                     title_text: "Sensors value over time",
@@ -74,60 +74,7 @@ module.exports = function(app, passport) {
 
                 db.close();
             });
-        });
-        
-
-        /*
-        mongo.mongoose.connect(conf.url, {useNewUrlParser: true});
-        var db = mongo.mongoose.connection;
-            db.on('error', console.error.bind(console, 'connection error:'));
-            db.once('open', function() {
-                
-        });
-        */
-
-       
-
-        //JSONS of sensor data between date X and Y
-        //TODO: Read from mongoDB the jsons
-        //For simplicity I randomize the sensor data
-
-        //var jsons = [];
-        //
-        //Generate random sensor data, put into json
-        //for(var i = 1; i <= 31; i++) {
-        //    jsons.push({
-        //        value: Math.random()*1023
-        //    });
-        //}
-        //
-        //var labels = [] //To generate 
-        //
-        //for(var i = 1; i <= 31; i++) {
-        //    labels.push(i)
-        //}
-        //
-        //var dataset_data = []
-        //jsons.forEach((json)=> {
-        //    var timestamp = json["timestamp"]
-        //    var sensor_name = json["sensor"]
-        //    var sensor_value = json["value"]
-        //
-        //    dataset_data.push(sensor_value)
-        //});
-        //
-        ////For simplicity, all jsons are from this category (same sensor)
-        //var sensor_name = "Temp"
-    
-
-        //timestampArray=['1/10/93 10:11:22','1/10/93 10:11:33','1/10/93 10:11:44','1/10/93 10:11:55','1/10/93 10:12:06'];
-        //tempArray=['10','11','13','16','20'];
-        //humidArray=['12','21','12','21','12'];
-        //lightArray=['53','13','13','13','55'];
-        //pirArray=['0','0','0','2','18'];
-
-
-        
+        });        
     });
 
 
