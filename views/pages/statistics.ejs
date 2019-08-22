@@ -14,6 +14,9 @@
 </header>
 
 <main>
+Limit:
+<input type="number" id="limit" value=20>
+
 <div style="width: 75%">
     <canvas id="myChart"></canvas>
 </div>
@@ -116,8 +119,9 @@ Date to:
     function go_click() {
         var from = document.getElementById('from').value
         var to = document.getElementById('to').value
-
-        window.location = "/statistics?from="+from+"&to="+to;
+        var limit = document.getElementById('limit').value
+        
+        window.location = "/statistics?from="+from+"&to="+to+"&limit="+limit;
     }
 
     function getUrlParameter(parameter) {
@@ -130,9 +134,11 @@ Date to:
     window.onload = function() {
         var uri_from = getUrlParameter('from')
         var uri_to = getUrlParameter('to')
+        var uri_limit = getUrlParameter('limit')
 
         document.getElementById('from').value = uri_from
         document.getElementById('to').value = uri_to
+        document.getElementById('limit').value = uri_limit
 
         // console.log("uri_from = " + uri_from)
         // console.log("uri_to = " + uri_to)
