@@ -18,6 +18,15 @@
     <canvas id="myChart"></canvas>
 </div>
 
+<br><hr><br>
+
+Date from:
+<input type="date" id="from">
+
+Date to:
+<input type="date" id="to">
+
+<input type="button" value="Go" id="go" onclick="go_click()" >
 <script>
 
 	var title_text = "<%= title_text %>";    
@@ -102,6 +111,34 @@
 			}  
         }
     });
+
+
+    function go_click() {
+        var from = document.getElementById('from').value
+        var to = document.getElementById('to').value
+
+        window.location = "/statistics?from="+from+"&to="+to;
+    }
+
+    function getUrlParameter(parameter) {
+        parameter = parameter.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?|&]' + parameter.toLowerCase() + '=([^&#]*)');
+        var results = regex.exec('?' + document.documentURI.toLowerCase().split('?')[1]);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    window.onload = function() {
+        var uri_from = getUrlParameter('from')
+        var uri_to = getUrlParameter('to')
+
+        document.getElementById('from').value = uri_from
+        document.getElementById('to').value = uri_to
+
+        // console.log("uri_from = " + uri_from)
+        // console.log("uri_to = " + uri_to)
+
+
+    };
     </script>
 </main>
 

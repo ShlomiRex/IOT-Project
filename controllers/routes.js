@@ -17,15 +17,27 @@ module.exports = function(app, passport) {
     app.get('/statistics', function(req, res) {
         var timestampArray=[], tempArray=[], humidArray=[],lightArray=[],pirArray=[]; 
 
-        
+        var req_from = req.query.from
+        var req_to = req.query.to
+
+        // console.log("From = " + req_from)
+        // console.log("To = " + req_to)
+
         mongo.MongoClient.connect(conf.url, function(err, db) {
             if (err) throw err;
             var dbo = db.db(conf.db_name);
 
-
-            const limit = 20;            
             var min = new Date("2019-08-19T00:00:00Z")
             var max = new Date("2019-08-20T23:59:59Z")
+
+            const limit = 20;    
+            if(! req_from)        
+                min = req_from
+            if(! req_to)
+                max = req_to
+
+            console.log("min = " + min)
+            console.log("max = " + max)
             
             var find_filter = {
                 "timestamp": { $gte : min, $lte: max }
