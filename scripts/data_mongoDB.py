@@ -201,9 +201,9 @@ if __name__ == "__main__":
                     row = {    #    fields = ["timestamp", "Light", "Motion", "Temp", "Humidity", "InUse"]
                         'timestamp' : dt,
                         'light' : currentLight,
-                        'motion' : motion,
+                        'pir' : motion,
                         'temp' : temp,
-                        'humidity' : humidity,
+                        'humid' : humidity,
                         'inUse' : inUse
                     }
                     result=collection.insert_one(row)

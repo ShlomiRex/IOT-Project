@@ -20,9 +20,9 @@ Collectiom: sensors
 ```
 {
     timestamp : Date,
-    temp: Number,
-    humid: Number,
-    light: Number,
-    pir: Number
+    temp: Number (0 - 60),
+    humid: Number (0 - 100),
+    light: Number (0 - 4095),
+    pir: Number (0 - 1)
 }
 ```
