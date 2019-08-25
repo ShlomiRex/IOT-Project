@@ -1,5 +1,3 @@
-
-
 # libraries
 import datetime
 import random
@@ -59,12 +57,12 @@ def isMotion (inUse):
     return 0
 
 def upgradeTemp (temp, inUse, lastInUse, hour):
-    proportion = 1                                        #make it real
+    proportion = 0.3                                        #make it real
     change = 0
     if (inUse):
         change += random.randint(2, 10) * proportion
     elif (lastInUse):
-        change -= random.randint(2, 10) * proportion
+        change -= random.randint(1, 8) * proportion
     if hour < 6:
         change -= random.randint(-1, 7) * proportion
     elif hour < 11:
@@ -72,12 +70,12 @@ def upgradeTemp (temp, inUse, lastInUse, hour):
     elif hour <14:
         change += random.randint(-2, 20) * proportion
     elif hour < 18:
-        change -= random.randint(-2, 10) * proportion
+        change -= random.randint(-2, 8) * proportion
     else:
-        change -= random.randint(-2, 20) * proportion
+        change -= random.randint(-2, 18) * proportion
     temp += change
-    if(temp > 1000):
-        temp = 1000
+    if(temp > 500):
+        temp = 500
     elif temp < 100:
         temp = 100
     return temp
@@ -85,12 +83,12 @@ def upgradeTemp (temp, inUse, lastInUse, hour):
 def upgradeLight (light, hour, month):
     proportion = 12                                        #make it real
     change = 0
-    max = 4000        #if there is clouds
+    max = 3000        #if there is clouds
     if(month < 4 or month > 10):
         if (random.randint (0, 7) == 0 ):
-            max = 3000
+            max = 2000
     elif (random.randint (0, 20)== 0):
-        max= 3000
+        max= 2000
 
     if hour < 5:
         change -= random.randint(-2, 2) * proportion
@@ -105,7 +103,7 @@ def upgradeLight (light, hour, month):
 
     light += change
     if(light > max):
-        light = 1000
+        light = max
     elif light < 800:
         light = 800
     return light
@@ -117,17 +115,17 @@ def setLight (naturalLight, isPower):
         return naturalLight
 
 def upgradeHumi (humidity, inUse, lastInUse, hour):
-    proportion = 2                                        #make it real
+    proportion = 1.2                                        #make it real
     change = 0
     if (inUse and not lastInUse):
         change += random.randint(0, 5) * proportion
     elif (lastInUse):
-        change -= random.randint(0, 4) * proportion
+        change -= random.randint(0, 6) * proportion
 
     if hour < 6:
         change += random.randint(-2, 8) * proportion
     elif hour < 11:
-        change -= random.randint(-2, 10) * proportion
+        change -= random.randint(-2, 11) * proportion
     elif hour <14:
         change -= random.randint(-2, 25) * proportion
     elif hour < 18:
@@ -173,8 +171,7 @@ if __name__ == "__main__":
     randPower=0
     lastInUse = False
     lastInPower = False
-    humidity = 75
-    temp = 140     
+    temp = 200     
     humidity = 500 
     naturalLight = 1100                                #make it real
     daysPerMonth = [31,28,31,30,31,30,31,31,30,31,31,31]
@@ -192,6 +189,7 @@ if __name__ == "__main__":
                     isPower = (inUse or (lastInUse and random.randint(0, 10) > 0))
                     motion = isMotion(inUse)
                     temp = upgradeTemp(temp, inUse, lastInUse, hour)
+                    tempForDb = int (temp / 10)
                     naturalLight = upgradeLight(naturalLight, hour, month)
                     currentLight = setLight(naturalLight,isPower)
                     humidity = upgradeHumi(humidity, inUse, lastInUse, hour)
@@ -202,12 +200,11 @@ if __name__ == "__main__":
                         'timestamp' : dt,
                         'light' : currentLight,
                         'pir' : motion,
-                        'temp' : temp,
-                        'humid' : humidity,
+                        'temp' : tempForDb,
+                        'humid' : int(humidity),
                         'inUse' : inUse
                     }
                     result=collection.insert_one(row)
 
                     lastInUse = inUse
                     lastIsPower = isPower
-
