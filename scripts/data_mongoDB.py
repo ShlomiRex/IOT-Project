@@ -51,13 +51,13 @@ def checkIfUse(prograss, hour):
             return True
     return False
     
-def isMotion (inUse):
+def isMotion (inUse):                                   #(0-1)
     if(inUse and random.randint(0, 30) != 0) or (not inUse and random.randint(0, 20) == 0):
         return 1
     return 0
 
 def upgradeTemp (temp, inUse, lastInUse, hour):
-    proportion = 0.3                                        #make it real
+    proportion = 0.3                                        #(0-100)
     change = 0
     if (inUse):
         change += random.randint(2, 10) * proportion
@@ -80,26 +80,24 @@ def upgradeTemp (temp, inUse, lastInUse, hour):
         temp = 100
     return temp
 
-def upgradeLight (light, hour, month):
-    proportion = 12                                        #make it real
+def upgradeLight (light, hour, cloudy):
+    proportion = 6                                        #(0-4095)
     change = 0
     max = 3000        #if there is clouds
-    if(month < 4 or month > 10):
-        if (random.randint (0, 7) == 0 ):
-            max = 2000
-    elif (random.randint (0, 20)== 0):
-        max= 2000
+    if(cloudy):
+        max = 2200
+        proportion = 4
 
     if hour < 5:
         change -= random.randint(-2, 2) * proportion
     elif hour < 11:
-        change += random.randint(-1, 20) * proportion
+        change += random.randint(-1, 16) * proportion
     elif hour <14:
-        change += random.randint(-2, 10) * proportion
+        change += random.randint(-2, 8) * proportion
     elif hour < 18:
-        change -= random.randint(-10, 2) * proportion
+        change -= random.randint(-2, 7) * proportion
     else:
-        change -= random.randint(-20, 1) * proportion
+        change -= random.randint(-1, 14) * proportion
 
     light += change
     if(light > max):
@@ -110,12 +108,15 @@ def upgradeLight (light, hour, month):
 
 def setLight (naturalLight, isPower):
     if(isPower):
-        return (1700 + int(naturalLight*0.2))
+        if(naturalLight < 1700):
+            return (1700 + int(naturalLight*0.2))
+        else:
+            return (200 + int(naturalLight))
     else:
         return naturalLight
 
 def upgradeHumi (humidity, inUse, lastInUse, hour):
-    proportion = 1.2                                        #make it real
+    proportion = 1.2                                        #(0-100)
     change = 0
     if (inUse and not lastInUse):
         change += random.randint(0, 5) * proportion
@@ -134,10 +135,10 @@ def upgradeHumi (humidity, inUse, lastInUse, hour):
         change += random.randint(-2, 15) * proportion
 
     humidity += change
-    if(humidity > 1000):
-        humidity = 1000
-    elif humidity < 100:
-        humidity = 100
+    if(humidity > 950):
+        humidity = 950
+    elif humidity < 200:
+        humidity = 200
     return humidity
 
 def createTime(year,month,day,hour,minute):
@@ -172,7 +173,7 @@ if __name__ == "__main__":
     lastInUse = False
     lastInPower = False
     temp = 200     
-    humidity = 500 
+    humidity = 550 
     naturalLight = 1100                                #make it real
     daysPerMonth = [31,28,31,30,31,30,31,31,30,31,31,31]
     for month in range(8):
@@ -182,6 +183,12 @@ if __name__ == "__main__":
                 prograss = 0
             else:
                 prograss = random.randint(0, 20)
+            cloudy = False
+            if(month < 4 or month > 10):
+                if (random.randint (0, 7) == 0 ):
+                    cloudy = True
+            elif (random.randint (0, 20)== 0):
+                cloudy = True
             for hour in range(24):
                 for minute in range(6):
            
@@ -190,9 +197,10 @@ if __name__ == "__main__":
                     motion = isMotion(inUse)
                     temp = upgradeTemp(temp, inUse, lastInUse, hour)
                     tempForDb = int (temp / 10)
-                    naturalLight = upgradeLight(naturalLight, hour, month)
+                    naturalLight = upgradeLight(naturalLight, hour, cloudy)
                     currentLight = setLight(naturalLight,isPower)
                     humidity = upgradeHumi(humidity, inUse, lastInUse, hour)
+                    humiForDb = int (humidity / 10)
                     dt = createTime(year,month,day,hour,minute)
 
 
@@ -201,7 +209,7 @@ if __name__ == "__main__":
                         'light' : currentLight,
                         'pir' : motion,
                         'temp' : tempForDb,
-                        'humid' : int(humidity),
+                        'humid' : humiForDb,
                         'inUse' : inUse
                     }
                     result=collection.insert_one(row)
