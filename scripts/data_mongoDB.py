@@ -1,3 +1,5 @@
+
+
 # libraries
 import datetime
 import random
@@ -5,7 +7,6 @@ import subprocess
 import os
 import csv
 import datetime
-from pymongo import MongoClient
 
 
 
@@ -51,7 +52,7 @@ def checkIfUse(prograss, hour):
             return True
     return False
     
-def isMotion (inUse):                                   #(0-1)
+def isMotion (inUse):                                       #(0-1)
     if(inUse and random.randint(0, 30) != 0) or (not inUse and random.randint(0, 20) == 0):
         return 1
     return 0
@@ -166,53 +167,58 @@ if __name__ == "__main__":
     client = MongoClient('localhost',27017)                                                #fix the port
     db=client.iot                                                              #fix the collection name
     collection = db.esp_sensors
-    year="2019"
-    DiW=2
-    prograss = 0
-    randPower=0
-    lastInUse = False
-    lastInPower = False
-    temp = 200     
-    humidity = 550 
-    naturalLight = 1100                                #make it real
-    daysPerMonth = [31,28,31,30,31,30,31,31,30,31,31,31]
-    for month in range(8):
-        for day in range(daysPerMonth[month]):
-            DiW=(1+DiW)%7
-            if DiW == 0:
-                prograss = 0
-            else:
-                prograss = random.randint(0, 20)
-            cloudy = False
-            if(month < 4 or month > 10):
-                if (random.randint (0, 7) == 0 ):
+    with open('res.csv', mode='w') as res:
+        fields = ["timestamp", "Light", "Motion", "Temp", "Humidity", "InUse"]
+        res_writer = csv.DictWriter(res, fieldnames = fields,  extrasaction='ignore', delimiter = ',')
+        res_writer.writeheader()
+        year="2019"
+        DiW=2
+        prograss = 0
+        randPower=0
+        lastInUse = False
+        lastInPower = False
+        humidity = 75
+        temp = 200     
+        humidity = 500 
+        naturalLight = 1300                            #make it real
+        daysPerMonth = [31,28,31,30,31,30,31,31,30,31,31,31]
+        for month in range(8):
+            for day in range(daysPerMonth[month]):
+                DiW=(1+DiW)%7
+                if DiW == 0:
+                    prograss = 0
+                else:
+                    prograss = random.randint(0, 20)
+                cloudy = False
+                if(month < 4 or month > 10):
+                    if (random.randint (0, 7) == 0 ):
+                        cloudy = True
+                elif (random.randint (0, 20)== 0):
                     cloudy = True
-            elif (random.randint (0, 20)== 0):
-                cloudy = True
-            for hour in range(24):
-                for minute in range(6):
-           
-                    inUse = checkIfUse(prograss, hour)
-                    isPower = (inUse or (lastInUse and random.randint(0, 10) > 0))
-                    motion = isMotion(inUse)
-                    temp = upgradeTemp(temp, inUse, lastInUse, hour)
-                    tempForDb = int (temp / 10)
-                    naturalLight = upgradeLight(naturalLight, hour, cloudy)
-                    currentLight = setLight(naturalLight,isPower)
-                    humidity = upgradeHumi(humidity, inUse, lastInUse, hour)
-                    humiForDb = int (humidity / 10)
-                    dt = createTime(year,month,day,hour,minute)
+                for hour in range(24):
+                    for minute in range(6):
+               
+                        inUse = checkIfUse(prograss, hour)
+                        isPower = (inUse or (lastInUse and random.randint(0, 10) > 0))
+                        motion = isMotion(inUse)
+                        temp = upgradeTemp(temp, inUse, lastInUse, hour)
+                        naturalLight = upgradeLight(naturalLight, hour, cloudy)
+                        currentLight = setLight(naturalLight,isPower)
+                        humidity = upgradeHumi(humidity, inUse, lastInUse, hour)
+                        dt = createTime(year,month,day,hour,minute)
+                        tempForDb = int (temp / 10)
+                        humiForDb = int (humidity / 10)
 
+                        res_writer.writerows([{'timestamp':dt, 'Light':currentLight, 'Motion':motion, 'Temp':tempForDb, 'Humidity':humiForDb, 'InUse': inUse}])
+                        row = {    #    fields = ["timestamp", "Light", "Motion", "Temp", "Humidity", "InUse"]
+                            'timestamp' : dt,
+                            'light' : currentLight,
+                            'pir' : motion,
+                            'temp' : tempForDb,
+                            'humid' : humiForDb,
+                            'inUse' : inUse
+                        }
+                        result=collection.insert_one(row)
+                        lastInUse = inUse
+                        lastIsPower = isPower
 
-                    row = {    #    fields = ["timestamp", "Light", "Motion", "Temp", "Humidity", "InUse"]
-                        'timestamp' : dt,
-                        'light' : currentLight,
-                        'pir' : motion,
-                        'temp' : tempForDb,
-                        'humid' : humiForDb,
-                        'inUse' : inUse
-                    }
-                    result=collection.insert_one(row)
-
-                    lastInUse = inUse
-                    lastIsPower = isPower
