@@ -97,6 +97,10 @@ module.exports = function(app, passport) {
         });
     });
 
+    app.get('/bigml', function(req, res) {
+        res.render('pages/bigml');
+    });
+
     // ------------------ POST ------------------
 
     // process the login form
