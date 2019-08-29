@@ -63,13 +63,7 @@ module.exports = function(app, passport) {
                     labels: timestampArray,
         
                     dataset1_title: "Temperature",
-                    dataset1_data: tempArray,
-                    dataset2_title: "Humidity",
-                    dataset2_data: humidArray,
-                    dataset3_title: "Light",
-                    dataset3_data: lightArray,
-                    dataset4_title: "PIR",
-                    dataset4_data: pirArray
+                    dataset1_data: tempArray
                 };
                 //Second argument is data sent to ejs template to generate dynamic page!
                 res.render('pages/statistics', data); 
