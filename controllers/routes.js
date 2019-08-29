@@ -59,11 +59,17 @@ module.exports = function(app, passport) {
                 }
 
                 var data = {
-                    title_text: "Sensors value over time",
-                    labels: timestampArray,
-        
-                    dataset1_title: "Temperature",
-                    dataset1_data: tempArray
+                    title_text: "Sensors value over the time",
+                     labels: timestampArray,
+            
+                     dataset1_title: "Temp value",
+                     dataset1_data: tempArray,
+                     dataset2_title: "Humid value",
+                     dataset2_data: humidArray,
+                     dataset3_title: "Light value",
+                     dataset3_data: lightArray,
+                     dataset4_title: "Pirvalue",
+                     dataset4_data: pirArray
                 };
                 //Second argument is data sent to ejs template to generate dynamic page!
                 res.render('pages/statistics', data); 
